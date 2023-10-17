@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-class DCGAN_Generator(nn.Module): # input image size: 3 x 128 x 128, here 3 represents number of channels i.e. r,g,b
+class DCGAN_Generator(nn.Module): # input image size: 3 x 64 x 64, here 3 represents number of channels i.e. r,g,b
     def __init__(self, enc_input_channels=3, enc_output_channels=8, noise_dim=512, mode="analysis"):
         super(DCGAN_Generator,self).__init__()
         self.mode = mode
@@ -58,7 +58,7 @@ class DCGAN_Generator(nn.Module): # input image size: 3 x 128 x 128, here 3 repr
         return reconstruction
 
 
-class DCGAN_Discriminator(nn.Module): # input image size: 3 x 128 x 128, here 3 represents number of channels i.e. r,g,b
+class DCGAN_Discriminator(nn.Module): # input image size: 3 x 64 x 64, here 3 represents number of channels i.e. r,g,b
     def __init__(self, enc_input_channels=3, enc_output_channels=4, mode="analysis"):
         super(DCGAN_Discriminator,self).__init__()
         self.mode = mode
