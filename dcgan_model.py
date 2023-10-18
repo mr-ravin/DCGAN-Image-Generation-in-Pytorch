@@ -6,6 +6,11 @@ class DCGAN_Generator(nn.Module): # input image size: 3 x 64 x 64, here 3 repres
         self.mode = mode
         self.activation = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
+        self.batch_norm2d_5 = nn.BatchNorm2d(enc_output_channels*16)
+        self.batch_norm2d_4 = nn.BatchNorm2d(enc_output_channels*8)
+        self.batch_norm2d_3 = nn.BatchNorm2d(enc_output_channels*4)
+        self.batch_norm2d_2 = nn.BatchNorm2d(enc_output_channels*2)
+
         self.gen_deconv5 = nn.ConvTranspose2d(
             in_channels=noise_dim, out_channels=enc_output_channels*16, kernel_size=4, 
             stride=1, bias= True, padding = 0
@@ -36,18 +41,22 @@ class DCGAN_Generator(nn.Module): # input image size: 3 x 64 x 64, here 3 repres
         if self.mode=="analysis":
             print("input dconv5: ",x.shape)
         x = self.activation(self.gen_deconv5(x))
+        x = self.batch_norm2d_5(x)
         if self.mode=="analysis":
             print("output dconv5: ",x.shape)
             print("input dconv4: ",x.shape)
         x = self.activation(self.gen_deconv4(x))
+        x = self.batch_norm2d_4(x)
         if self.mode=="analysis":
             print("output dconv4: ",x.shape)
             print("input dconv3: ",x.shape)
         x = self.activation(self.gen_deconv3(x))
+        x = self.batch_norm2d_3(x)
         if self.mode=="analysis":
             print("output dconv3: ",x.shape)
             print("input dconv2: ",x.shape)
         x = self.activation(self.gen_deconv2(x))
+        x = self.batch_norm2d_2(x)
         if self.mode=="analysis":
             print("output dconv2: ",x.shape)
             print("input dconv1: ",x.shape)
@@ -69,6 +78,10 @@ class DCGAN_Discriminator(nn.Module): # input image size: 3 x 64 x 64, here 3 re
         self.disc_conv4 = nn.Conv2d(enc_output_channels*8, enc_output_channels*16, kernel_size=4,stride=2, padding = 1)
         self.disc_conv5 = nn.Conv2d(enc_output_channels*16, enc_output_channels*32, kernel_size=4,stride=1, padding = 0, bias = True)
         self.fc0 = nn.Linear(enc_output_channels*32, 1)
+        self.batch_norm2d_1 = nn.BatchNorm2d(enc_output_channels*2)
+        self.batch_norm2d_2 = nn.BatchNorm2d(enc_output_channels*4)
+        self.batch_norm2d_3 = nn.BatchNorm2d(enc_output_channels*8)
+        self.batch_norm2d_4 = nn.BatchNorm2d(enc_output_channels*16)
         self.sigmoid = nn.Sigmoid()
 
 
@@ -76,18 +89,22 @@ class DCGAN_Discriminator(nn.Module): # input image size: 3 x 64 x 64, here 3 re
         if self.mode=="analysis":
             print("input conv1: ",x.shape)
         x = self.activation(self.disc_conv1(x))
+        x = self.batch_norm2d_1(x)
         if self.mode=="analysis":
             print("output conv1: ",x.shape)
             print("input conv2: ",x.shape)
         x = self.activation(self.disc_conv2(x))
+        x = self.batch_norm2d_2(x)
         if self.mode=="analysis":
             print("output conv2: ",x.shape)
             print("input conv3: ",x.shape)
         x = self.activation(self.disc_conv3(x))
+        x = self.batch_norm2d_3(x)
         if self.mode=="analysis":
             print("output conv3: ",x.shape)
             print("input conv4: ",x.shape)
         x = self.activation(self.disc_conv4(x))
+        x = self.batch_norm2d_4(x)
         if self.mode=="analysis":
             print("output conv4: ",x.shape)
             print("input conv5: ",x.shape)
